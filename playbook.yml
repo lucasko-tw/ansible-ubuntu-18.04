@@ -2,6 +2,7 @@
   become: true
   vars:
     ansible_python_interpreter: "/usr/bin/env python3"
+    username: lucas3
 
   tasks:
   - name: "Install Packages"
@@ -93,8 +94,8 @@
   - name: "Add user to docker group"
     command:  usermod -aG docker $USER
 
-  - name: "Reboot"
-    reboot:
+#  - name: "Reboot"
+#    reboot:
 
 
 
@@ -106,4 +107,27 @@
 
 
 
+  - name: Ensure group "somegroup" exists
+    group:
+      name: "{{ username }}"
+      state: present
 
+  - name: Create a login user
+    user:
+      name: "{{ username }}"
+      password: "{{ username | password_hash('sha512') }}"
+      groups: # Empty by default
+       - docker
+       - sudo
+       - adm
+       - cdrom
+       - dip
+       - plugdev
+       - lpadmin
+       - sambashare
+       - "{{username}}"
+      state: present
+      shell: /bin/bash       # Defaults to /bin/bash
+      system: no             # Defaults to no
+      createhome: yes        # Defaults to yes
+      home: "/home/{{ username }}"  # Defaults to /home/<username>
