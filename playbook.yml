@@ -4,6 +4,15 @@
     ansible_python_interpreter: "/usr/bin/env python3"
     username: lucas3
 
+  handlers:
+   - name: restart host
+     reboot:
+   #  Handlers will run once, and only once, at the end of a play. 
+
+
+
+
+
   tasks:
   - name: "Install Packages"
     apt:
@@ -93,18 +102,13 @@
 
   - name: "Add user to docker group"
     command:  usermod -aG docker $USER
-
-#  - name: "Reboot"
-#    reboot:
-
+    notify: 
+       - restart host
 
 
   - name: pip install docker-py
     pip:
       name: docker-py
-
-
-
 
 
   - name: Ensure group "somegroup" exists
@@ -131,3 +135,21 @@
       system: no             # Defaults to no
       createhome: yes        # Defaults to yes
       home: "/home/{{ username }}"  # Defaults to /home/<username>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
